@@ -1,6 +1,6 @@
 {
   "name": "react-native-simple-swiper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A lightweight React Native Swiper component",
   "main": "lib/Swiper.js",
   "scripts": {
@@ -16,11 +16,11 @@
   "author": "Rahmat Harun",
   "license": "MIT",
   "peerDependencies": {
-    "@react-native-picker/picker": "2.7.5",
     "react": "18.2.0",
     "react-native": "0.74.2"
   },
   "dependencies": {
+    "@react-native-picker/picker": "2.7.5",
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
