@@ -1,0 +1,27 @@
+{
+  "name": "react-native-simple-swiper",
+  "version": "0.0.1",
+  "description": "A lightweight React Native Swiper component",
+  "main": "lib/Swiper.js",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["react-native", "swiper", "carousel","swiper dropdown"],
+  "author": "Rahmat Harun",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-native": "0.74.2",
+    "@react-native-picker/picker": "2.7.5"
+  },
+  "dependencies": {
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7"
+  }
+}
