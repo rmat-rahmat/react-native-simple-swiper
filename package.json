@@ -1,6 +1,6 @@
 {
   "name": "react-native-simple-swiper",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A lightweight React Native Swiper component",
   "main": "lib/Swiper.js",
   "scripts": {
