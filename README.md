@@ -1,4 +1,4 @@
-# My Swiper Component
+# React Native Simple Swiper
 
 A customizable React Native Swiper component.
 

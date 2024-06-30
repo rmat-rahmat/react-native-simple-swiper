@@ -36,8 +36,10 @@ const Swiper = ({
   loadAll = false,
   scrollViewStyle,
   containerStyle,
+  slideStyle,
   headerStyle,
   dir = 'x',
+  momentumScroll=false,
 }) => {
   // State to manage the current index of the swiper
   const [index, setIndex] = useState(initialIndex);
@@ -47,13 +49,6 @@ const Swiper = ({
   const slides = useMemo(() => React.Children.toArray(children), [children]);
   // Ref to access the ScrollView component
   const scrollViewRef = useRef(null);
-
-  // Effect to handle screen dimension changes
-  useEffect(() => {
-    const onDimensionsChange = ({ window }) => setDimensions(window);
-    Dimensions.addEventListener('change', onDimensionsChange);
-    return () => Dimensions.removeEventListener('change', onDimensionsChange);
-  }, []);
 
   // Function to update the current index based on scroll offset
   const updateIndex = useCallback((offset, layout, cb) => {
@@ -74,9 +69,13 @@ const Swiper = ({
   // Callback for handling the end of scroll events
   const onScrollEnd = useCallback(({ nativeEvent }) => {
     const { contentOffset, layoutMeasurement } = nativeEvent;
+    if(momentumScroll){
     const velocity = nativeEvent.velocity[dir] ?? 0;
     if (Math.abs(velocity) < 6) {
       updateIndex(contentOffset, layoutMeasurement, pageScroll);
+    }}
+    else if(nativeEvent.velocity[dir]==0){
+      updateIndex(contentOffset, layoutMeasurement);
     }
   }, [updateIndex]);
 
@@ -90,14 +89,26 @@ const Swiper = ({
 
   // Function to render all slides
   const renderSlides = () => slides.map((child, i) => (
-    <View style={[styles.slide, { width: dimensions.width, height: dimensions.height }]} key={i}>
-      {child}
+    <View 
+        style={[
+            styles.slide, 
+            dir === 'x' ? { width: dimensions.width } : { height: dimensions.height },
+            slideStyle
+        ]} 
+        key={i}
+    >
+        {child}
     </View>
-  ));
+));
+
 
   // Function to render slides lazily with an ActivityIndicator for non-active slides
   const renderPartialSlides = useMemo(() => slides.map((child, i) => (
-    <View style={[styles.slide, { width: dimensions.width, height: dimensions.height }]} key={i}>
+    <View  style={[
+      styles.slide, 
+      dir === 'x' ? { width: dimensions.width } : { height: dimensions.height },
+      slideStyle
+  ]} key={i}>
       {Math.abs(i - index) < 2 ? child :
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#999999" />
@@ -126,6 +137,7 @@ const Swiper = ({
       )}
       <ScrollView
         ref={scrollViewRef}
+        pagingEnabled={!momentumScroll}
         horizontal={horizontal}
         onMomentumScrollEnd={onScrollEnd}
         onScrollEndDrag={onScrollEnd}
@@ -147,6 +159,7 @@ Swiper.propTypes = {
   onIndexChanged: PropTypes.func,
   scrollViewStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   containerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  slideStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   headerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   dir: PropTypes.string,
 };
