@@ -5,9 +5,13 @@ import {
   ScrollView,
   Dimensions,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
+  Platform,
+  Modal,
+  TouchableOpacity,
+  Text
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { Picker, PickerIOS } from '@react-native-picker/picker';
 import styles from './styles';
 
 /**
@@ -39,7 +43,7 @@ const Swiper = ({
   slideStyle,
   headerStyle,
   dir = 'x',
-  momentumScroll=false,
+  momentumScroll = false,
 }) => {
   // State to manage the current index of the swiper
   const [index, setIndex] = useState(initialIndex);
@@ -49,6 +53,8 @@ const Swiper = ({
   const slides = useMemo(() => React.Children.toArray(children), [children]);
   // Ref to access the ScrollView component
   const scrollViewRef = useRef(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Function to update the current index based on scroll offset
   const updateIndex = useCallback((offset, layout, cb) => {
@@ -69,12 +75,13 @@ const Swiper = ({
   // Callback for handling the end of scroll events
   const onScrollEnd = useCallback(({ nativeEvent }) => {
     const { contentOffset, layoutMeasurement } = nativeEvent;
-    if(momentumScroll){
-    const velocity = nativeEvent.velocity[dir] ?? 0;
-    if (Math.abs(velocity) < 6) {
-      updateIndex(contentOffset, layoutMeasurement, pageScroll);
-    }}
-    else if(nativeEvent.velocity[dir]==0){
+    if (momentumScroll) {
+      const velocity = nativeEvent.velocity[dir] ?? 0;
+      if (Math.abs(velocity) < 6) {
+        updateIndex(contentOffset, layoutMeasurement, pageScroll);
+      }
+    }
+    else if ((nativeEvent.velocity?.[dir] ?? 0) === 0) {
       updateIndex(contentOffset, layoutMeasurement);
     }
   }, [updateIndex]);
@@ -89,26 +96,26 @@ const Swiper = ({
 
   // Function to render all slides
   const renderSlides = () => slides.map((child, i) => (
-    <View 
-        style={[
-            styles.slide, 
-            dir === 'x' ? { width: dimensions.width } : { height: dimensions.height },
-            slideStyle
-        ]} 
-        key={i}
+    <View
+      style={[
+        styles.slide,
+        dir === 'x' ? { width: dimensions.width } : { height: dimensions.height },
+        slideStyle
+      ]}
+      key={i}
     >
-        {child}
+      {child}
     </View>
-));
+  ));
 
 
   // Function to render slides lazily with an ActivityIndicator for non-active slides
   const renderPartialSlides = useMemo(() => slides.map((child, i) => (
-    <View  style={[
-      styles.slide, 
+    <View style={[
+      styles.slide,
       dir === 'x' ? { width: dimensions.width } : { height: dimensions.height },
       slideStyle
-  ]} key={i}>
+    ]} key={i}>
       {Math.abs(i - index) < 2 ? child :
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#999999" />
@@ -124,17 +131,33 @@ const Swiper = ({
   return (
     <View style={[styles.container, containerStyle]}>
       {headerDropdown.length > 0 && (
-        <Picker
-          style={headerStyle}
-          selectedValue={index}
-          onValueChange={(itemIndex) => {
-            setIndex(itemIndex);
-            pageScroll(itemIndex);
-          }}
-        >
-          {renderDropdownItems()}
-        </Picker>
+        Platform.OS === 'ios' ? (
+          <TouchableOpacity
+            style={styles.dropdownButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.dropdownButtonText}>
+                {headerDropdown[index]}
+              </Text>
+              <View style={[styles.chevronDown, { borderColor: headerStyle?.dropdownColor || 'black' }]} />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <Picker
+            numberOfLines={3}
+            style={[headerStyle]}
+            selectedValue={index}
+            onValueChange={(itemIndex) => {
+              setIndex(itemIndex);
+              pageScroll(itemIndex);
+            }}
+          >
+            {renderDropdownItems()}
+          </Picker>
+        )
       )}
+     
       <ScrollView
         ref={scrollViewRef}
         pagingEnabled={!momentumScroll}
@@ -145,6 +168,32 @@ const Swiper = ({
       >
         {loadAll ? renderSlides() : renderPartialSlides}
       </ScrollView>
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          onPress={() => setModalVisible(false)} // Close modal on overlay press
+        >
+          
+        </TouchableOpacity>
+        <View style={[styles.modalContent, styles.modalBottom]}>
+            <PickerIOS 
+            numberOfLines={3}
+              style={[styles.pickerIOS, headerStyle]}
+              selectedValue={index}
+              onValueChange={(itemValue, itemIndex) => {
+                setIndex(itemValue);
+                pageScroll(itemIndex);
+              }}
+            >
+              {renderDropdownItems()}
+            </PickerIOS>
+          </View>
+      </Modal>
     </View>
   );
 };

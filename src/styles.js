@@ -64,6 +64,46 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: '#007aff',
   },
+  dropdownButton: {
+    marginTop:20,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  textContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dropdownButtonText: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  chevronDown: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 15,
+    borderLeftColor: 'transparent',
+    borderRightWidth: 15,
+    borderRightColor: 'transparent',
+    borderTopWidth: 10,
+    marginTop:5,
+    marginBottom:-10
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end', // Modal starts from the bottom
+    // backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    // backgroundColor: '#fff',
+    paddingVertical: 10,
+    // paddingHorizontal: 20,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  modalBottom: {
+    alignSelf: 'stretch', // Take full width
+  },
 });
 
 export default styles;
