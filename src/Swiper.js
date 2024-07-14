@@ -42,6 +42,7 @@ const Swiper = ({
   containerStyle,
   slideStyle,
   headerStyle,
+  iosDropdownStyle,
   dir = 'x',
   momentumScroll = false,
 }) => {
@@ -133,7 +134,7 @@ const Swiper = ({
       {headerDropdown.length > 0 && (
         Platform.OS === 'ios' ? (
           <TouchableOpacity
-            style={styles.dropdownButton}
+            style={[styles.dropdownButton,headerStyle]}
             onPress={() => setModalVisible(true)}
           >
             <View style={styles.textContainer}>
@@ -180,7 +181,7 @@ const Swiper = ({
         >
           
         </TouchableOpacity>
-        <View style={[styles.modalContent, styles.modalBottom]}>
+        <View style={[styles.modalContent, styles.modalBottom,iosDropdownStyle]}>
             <PickerIOS 
             numberOfLines={3}
               style={[styles.pickerIOS, headerStyle]}
@@ -210,6 +211,7 @@ Swiper.propTypes = {
   containerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   slideStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   headerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  iosDropdownStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   dir: PropTypes.string,
 };
 

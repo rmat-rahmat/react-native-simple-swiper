@@ -1,8 +1,9 @@
 {
   "name": "react-native-simple-swiper",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A lightweight React Native Swiper component",
   "main": "lib/Swiper.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     color: '#007aff',
   },
   dropdownButton: {
-    marginTop:20,
+    // marginTop:20,
     padding: 10,
     backgroundColor: '#fff',
   },
@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    shadowOpacity:0.8,
     // backgroundColor: '#fff',
     paddingVertical: 10,
     // paddingHorizontal: 20,
